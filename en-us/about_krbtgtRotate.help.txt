@@ -1,0 +1,15 @@
+﻿TOPIC
+    about_krbtgtRotate
+    
+SHORT DESCRIPTION
+    Summary of the module
+    
+LONG DESCRIPTION
+    Longer description of the module
+        
+    
+KEYWORDS
+    
+    
+SEE ALSO
+    
