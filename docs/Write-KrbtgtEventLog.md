@@ -189,7 +189,7 @@ Accept wildcard characters: False
 
 ## NOTES
 #### Name:      Write-KrbtgtEventLog
-#### Author:    Jim Schell
+#### Author:    J Schell
 #### Version:   0.2.1
 #### License:   MIT License
 

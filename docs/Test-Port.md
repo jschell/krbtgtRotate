@@ -200,7 +200,7 @@ Accept wildcard characters: False
 
 ## NOTES
 #### Name:       Test-Port
-#### Author:     Jim Schell
+#### Author:     J Schell
 #### Version:    0.1.5
 #### License:    MIT License
 

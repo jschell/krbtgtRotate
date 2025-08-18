@@ -137,7 +137,7 @@ Accept wildcard characters: False
 
 ## NOTES
 #### Name:      Set-KrbtgtPassword
-#### Author:    Jim Schell
+#### Author:    J Schell
 #### Version:   0.2.3
 #### License:   MIT License
 

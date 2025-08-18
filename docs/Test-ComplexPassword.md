@@ -151,7 +151,7 @@ Accept wildcard characters: False
 
 ## NOTES
 #### Name:       Test-ComplexPassword
-#### Author:     Jim Schell
+#### Author:     J Schell
 #### Version:    0.2.2
 #### License:    MIT
 

@@ -70,7 +70,7 @@ ticket lifetime plus twice the allowed clock skew.
 
 ## NOTES
 #### Name:      Get-KrbtgtPasswordMinimumAge
-#### Author:    Jim Schell
+#### Author:    J Schell
 #### Version:   0.3.0
 #### License:   MIT License
 

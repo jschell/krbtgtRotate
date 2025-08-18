@@ -234,7 +234,7 @@ Accept wildcard characters: False
 
 ## NOTES
 #### Name:       Test-PortTCP
-#### Author:     Jim Schell
+#### Author:     J Schell
 #### Version:    0.2.0
 #### License:    MIT License
 

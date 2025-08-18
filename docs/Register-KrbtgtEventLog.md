@@ -147,7 +147,7 @@ Accept wildcard characters: False
 
 ## NOTES
 #### Name:      Register-KrbtgtEventLog
-#### Author:    Jim Schell
+#### Author:    J Schell
 #### Version:   0.3.1
 #### License:   MIT License
 
