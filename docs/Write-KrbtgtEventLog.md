@@ -6,7 +6,7 @@ schema: 2.0.0
 
 # Write-KrbtgtEventLog
 ## SYNOPSIS
-Brief description of the function
+Writes a structured event to the Windows Event Log during krbtgt password rotation.
 
 ## SYNTAX
 
@@ -16,76 +16,53 @@ Write-KrbtgtEventLog [[-LogName] <String>] [[-SourceName] <String>] [[-ComputerN
 ```
 
 ## DESCRIPTION
-Detailed description of the function
-#----
-# events for krbtgt rotation
+Write-KrbtgtEventLog writes a Windows Event Log entry using a structured EventID and
+Category scheme derived from the rotation phase and message severity. The EventID is
+computed as the sum of the MessageType base value and the Category byte-sum value,
+allowing log consumers to filter by both rotation phase and severity simultaneously.
 
-(byte arr for 'krbtgt') 107 + 114 + 98 + 116 + 103 + 116 = 654 
-(byte arr for 'krbtgt rodc') 107 + 114 + 98 + 116 + 103 + 116 + 32 + 114 + 111 +100 +99 = 1110
-(byte arr for 'sync') 115 + 121 + 110 + 99 = 445
-(byte arr for 'online') 111 + 110 + 108 + 105 + 110 + 101 = 645
-(byte arr for 'krbtgtsinglereset') 107 + 114 + 98 + 116 + 103 + 116 + 115 + 105 + 110 + 103 + 108 + 101 + 114 + 101 + 115 + 101 + 116 = 1843
+MessageType base values: Information=256, Warning=512, Error=1024, SuccessAudit=2048, FailureAudit=4096
 
+Category byte-sum values (ASCII byte sum of the category string):
+- krbtgt = 654
+- online = 645
+- sync = 445
+- krbtgtsinglereset = 1843
 
-info krbtgt - last set pwd
-warning krbtgt - within change window
-info krbtgt - DFL greater than 2008
-error krbtgt - DFL less than 2008
-successAudit krbtgt - changed pwd
-failureAudit krbtgt - could not change pwd
+Example: an Information event for the krbtgt category has EventID 910 (256 + 654).
 
-(same for krbtgt rodc)
-
-info online - per RWDC available
-warning online - per RWDC not available
-error online - per RWDC could not reach over x iterations
-
-info sync - # of RWDC to sync
-info sync - per RWDC sync
-successAudit sync - when complete
-warning sync - could not sync one RWDC
-failureAudit sync - could not sync one RWDC over x iterations
-error sync - one or more RWDC could not sync
-
-successAudit krbtgtsinglereset - single reset of krbtgt completed
-failureAudit krbtgtsinglereset - could not complete single reset of krbtgt
-
-information
-256
-warning
-512
-error
-1024
-successAudit
-2048
-failureAudit
-4096
-
-#----
+Called internally by Invoke-KrbtgtPasswordRotate at each significant step of the rotation
+process. Can also be used standalone to write custom audit events to the same structured log.
 
 ## EXAMPLES
 
 ### -------------------------- EXAMPLE 1 --------------------------
 ```
-Verb-Noun -ParameterA 'someValue' -ParameterB 42
+PS > Write-KrbtgtEventLog -Message "krbtgt password rotation started" `
+        -Category "krbtgt" -MessageType "Information"
 ```
 
 ##Results
 
 Description
 -----------
-First is the simplest example, showing the effect of the cmdlet with only the required parameters.
+Writes an Information event to the 'Directory Service' log using the default source name
+'krbtgtRotation' on the local computer. EventID = 910 (Information 256 + krbtgt 654).
 
 ### -------------------------- EXAMPLE 2 --------------------------
 ```
-Verb-Noun 'someValue' 42
+PS > Write-KrbtgtEventLog -Message "Sync failed for DC01.contoso.com" `
+        -Category "sync" -MessageType "Warning" `
+        -LogName "Directory Service" -SourceName "krbtgtRotation" `
+        -ComputerName "DC01.contoso.com"
 ```
 
 ##Results
 
 Description
 -----------
-Final example shows real world scenario, and effects.
+Writes a Warning event to a remote computer's event log. EventID = 957 (Warning 512 + sync 445).
+Use this to record per-DC sync failures during a rotation.
 
 ## PARAMETERS
 

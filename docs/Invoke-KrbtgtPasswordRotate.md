@@ -178,7 +178,10 @@ Accept wildcard characters: False
 ```
 
 ### -WhatIf
-{{Fill WhatIf Description}}
+Shows what would happen if the cmdlet runs without performing the actual rotation.
+Prerequisite validation (elevated session, domain functional level, PDC Emulator
+reachability, krbtgt account lookup, and password minimum age check) still executes.
+Use this to confirm all preconditions are met before committing to a live rotation.
 
 ```yaml
 Type: SwitchParameter
@@ -193,7 +196,9 @@ Accept wildcard characters: False
 ```
 
 ### -Confirm
-{{Fill Confirm Description}}
+Prompts for confirmation before executing the password change. Because ConfirmImpact
+is set to High, PowerShell will prompt automatically when $ConfirmPreference is set
+to High or lower. Use -Force to suppress the confirmation prompt.
 
 ```yaml
 Type: SwitchParameter
