@@ -380,7 +380,7 @@ about_comment_based_help
     {
         if($global:HaltingErrorCount -gt 0)
         {
-            $msgTooManyError = "Halting error(s) have been obseved. Please review log and correct before running again."
+            $msgTooManyError = "Halting error(s) have been observed. Please review log and correct before running again."
             Write-LogMessage -Message $msgTooManyError -Caller "Invoke-KrbtgtPasswordRotate" -Category Error @paramWriteLog
             Write-KrbtgtEventLog -Message $msgTooManyError -Category "krbtgt" -MessageType "Error" @paramWriteEvent
             Throw $msgTooManyError
@@ -527,7 +527,7 @@ about_comment_based_help
             }
             if($global:HaltingErrorCount -gt 0)
             {
-                $msgTooManyError = "Halting error(s) have been obseved. Please review log and correct before running again."
+                $msgTooManyError = "Halting error(s) have been observed. Please review log and correct before running again."
                 Write-LogMessage -Message $msgTooManyError -Caller "Invoke-KrbtgtPasswordRotate" -Category Error @paramWriteLog
                 Throw $msgTooManyError
             }
@@ -553,7 +553,7 @@ about_comment_based_help
             }
             if($global:HaltingErrorCount -gt 0)
             {
-                $msgTooManyError = "Halting error(s) have been obseved. Please review log and correct before running again."
+                $msgTooManyError = "Halting error(s) have been observed. Please review log and correct before running again."
                 Write-LogMessage -Message $msgTooManyError -Caller "Invoke-KrbtgtPasswordRotate" -Category Error @paramWriteLog
                 Throw $msgTooManyError
             }
@@ -640,7 +640,7 @@ about_comment_based_help
             }
             if($global:HaltingErrorCount -gt 0)
             {
-                $msgTooManyError = "Halting error(s) have been obseved. Please review log and correct before running again."
+                $msgTooManyError = "Halting error(s) have been observed. Please review log and correct before running again."
                 Write-LogMessage -Message $msgTooManyError -Caller "Invoke-KrbtgtPasswordRotate" -Category Error @paramWriteLog
                 Throw $msgTooManyError
             }

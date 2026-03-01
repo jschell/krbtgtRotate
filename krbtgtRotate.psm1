@@ -26,7 +26,7 @@ foreach( $entry in $privateFunctions ){
         . ( [scriptblock]::Create( [io.file]::ReadAllText($entry) ) )
     }
     catch {
-        "Error observed! S_"
+        Write-Warning "Error loading '$($entry.FullName)': $($_.Exception.Message)"
     }
     if( Get-Command -name $entry.baseName ){
         Write-Verbose "Loaded `'$($entry.baseName)`' via dot sourcing."
@@ -42,7 +42,7 @@ foreach( $entry in $publicFunctions ){
         . ( [scriptblock]::Create( [io.file]::ReadAllText($entry) ) )
     }
     catch {
-        "Error observed! S_"
+        Write-Warning "Error loading '$($entry.FullName)': $($_.Exception.Message)"
     }
     if( Get-Command -name $entry.baseName ){
         Write-Verbose "Loaded `'$($entry.baseName)`' via dot sourcing."

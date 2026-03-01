@@ -187,7 +187,7 @@ tested.
             {
                 $msgUserNotFound = "No matches found for $($User)"
                 Write-Warning $msgUserNotFound
-                break
+                return $False
             }            
         }
         

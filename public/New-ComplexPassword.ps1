@@ -186,7 +186,7 @@ System.String
                 $msgPasswordGenerationNotComplex = "Failed to generate " +
                     "password meeting complexity requirements after 20 iterations."
                 Write-LogMessage -Message $msgPasswordGenerationNotComplex -Caller "New-ComplexPassword" -Category Error @paramWriteLog
-                Write-Warning $msgWarnPasswordGenerationNotComplex
+                Write-Warning $msgPasswordGenerationNotComplex
             }
         }
         While( !(Test-ComplexPassword @paramTestComplex) -AND ($PasswordGenerationCount -le 20) )
