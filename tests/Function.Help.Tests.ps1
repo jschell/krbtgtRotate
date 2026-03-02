@@ -178,7 +178,7 @@ foreach($function in $allFunctions)
 			It "should not be auto-generated" {
 				$Help.Synopsis | Should Not BeLike '*`[`<CommonParameters`>`]*'
 			}
-			
+
 			# Should be a description for every function
 			It "gets description for $functionName" {
 				$Help.Description | Should Not BeNullOrEmpty
@@ -186,15 +186,33 @@ foreach($function in $allFunctions)
 
 			# Should be at least one example
 			It "gets example code from $functionName" {
-				($Help.Examples.Example | 
+				($Help.Examples.Example |
 					Select-Object -First 1).Code | Should Not BeNullOrEmpty
 			}
-			
+
 			# Should be at least one example description
 			It "gets example help from $functionName" {
-				($Help.Examples.Example.Remarks | 
+				($Help.Examples.Example.Remarks |
 					Select-Object -First 1).Text | Should Not BeNullOrEmpty
-			}	
+			}
+		}
+
+		Context "Test for placeholder/template content in $functionName" {
+			It "Synopsis should not be a generic 'Brief description' placeholder" {
+				$Help.Synopsis | Should Not BeLike 'Brief description*'
+			}
+
+			It "Synopsis should not contain 'Verb-Noun' template text" {
+				$Help.Synopsis | Should Not BeLike '*Verb-Noun*'
+			}
+
+			It "Description should not be a generic 'Detailed description' placeholder" {
+				($Help.Description | Out-String) | Should Not BeLike 'Detailed description*'
+			}
+
+			It "Examples should not use 'Verb-Noun' template text" {
+				($Help.Examples.Example.Code | Out-String) | Should Not BeLike '*Verb-Noun*'
+			}
 		}
 		
         Context "Test parameter help for $functionName" {

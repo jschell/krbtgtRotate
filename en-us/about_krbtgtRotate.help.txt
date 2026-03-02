@@ -1,15 +1,96 @@
-﻿TOPIC
+TOPIC
     about_krbtgtRotate
-    
+
 SHORT DESCRIPTION
-    Summary of the module
-    
+    krbtgtRotate is a PowerShell module for safely rotating the krbtgt account
+    password in Active Directory environments without disrupting Kerberos
+    authentication.
+
 LONG DESCRIPTION
-    Longer description of the module
-        
-    
+    The krbtgt account is a built-in Active Directory account used by the Kerberos
+    Key Distribution Center (KDC) to sign and encrypt all Kerberos
+    Ticket-Granting Tickets (TGTs) within the domain. Rotating its password is a
+    recommended security practice, particularly after a suspected credential
+    compromise (e.g., a Golden Ticket attack), domain administrator account
+    changes, or as part of a regular security hygiene schedule.
+
+    Rotating the krbtgt password incorrectly -- specifically, rotating it twice
+    within the Kerberos ticket lifetime -- will invalidate all existing TGTs in
+    the domain, causing domain-wide authentication failures for users, computers,
+    and services.
+
+    This module orchestrates the rotation safely by:
+
+    1. Validating prerequisites (elevated session, domain functional level, PDC
+       Emulator reachability, writable domain controller (RWDC) reachability).
+    2. Confirming the current krbtgt password is old enough to be safely rotated
+       based on: TGT lifetime + (2 x maximum clock skew).
+    3. Synchronizing the krbtgt object from the PDC Emulator to all writable
+       domain controllers (pre-rotate sync).
+    4. Rotating the password on the PDC Emulator.
+    5. Synchronizing the new password to all writable domain controllers
+       (post-rotate sync).
+    6. Logging all steps to the Windows Event Log (Directory Service source) and
+       a timestamped file on disk.
+
+  REQUIRED PRIVILEGES
+    The account executing this module must have:
+    - Domain Admins membership or equivalent delegation to reset the krbtgt
+      password in Active Directory.
+    - Local administrator rights on the machine where the module runs.
+    - Rights to register and write to the Windows Event Log source.
+
+    Run PowerShell as Administrator (elevated). The module will detect a
+    non-elevated session and stop with an error before making any changes.
+
+  MINIMUM WAIT BETWEEN ROTATIONS
+    You must wait at least: (Kerberos TGT Lifetime) + (2 x Maximum Clock Skew)
+    before rotating a second time. Default domain policy is 10-hour TGT lifetime
+    and 5-minute clock skew, giving a minimum wait of approximately 10 hours and
+    10 minutes. Use Get-KrbtgtPasswordMinimumAge to retrieve the calculated value
+    for your specific domain policy.
+
+  QUICK START
+    1. Import the module:
+          Import-Module .\krbtgtRotate.psd1
+
+    2. Register the event log source (one-time setup, requires admin):
+          Register-KrbtgtEventLog
+
+    3. Check the minimum wait time between rotations:
+          Get-KrbtgtPasswordMinimumAge
+
+    4. Run a dry-run to verify all prerequisites pass without making changes:
+          Invoke-KrbtgtPasswordRotate -WhatIf
+
+    5. Execute the rotation:
+          Invoke-KrbtgtPasswordRotate -Force
+
+  KNOWN LIMITATIONS
+    - Pre-rotate and post-rotate DC sync logic is duplicated within
+      Invoke-KrbtgtPasswordRotate. A future version will refactor this into a
+      shared helper function. This does not affect correctness.
+    - The InfoVariable parameter in Test-Port and Test-PortTCP creates
+      global-scope variables as a workaround for pre-WMF5 environments where
+      Write-Information is unavailable.
+    - The krbtgt password is held in memory as a plaintext string during rotation.
+      This is required by Active Directory's password-reset API. It is not written
+      to disk or logged.
+    - RODC (Read-Only Domain Controller) password rotation support is planned but
+      not yet implemented in the current version.
+
 KEYWORDS
-    
-    
+    krbtgt, Kerberos, Active Directory, password rotation, security, TGT,
+    Golden Ticket, domain controller, KDC
+
 SEE ALSO
-    
+    Invoke-KrbtgtPasswordRotate
+    Get-KrbtgtPasswordMinimumAge
+    Register-KrbtgtEventLog
+    Set-KrbtgtPassword
+    New-ComplexPassword
+    Test-ComplexPassword
+    Test-Port
+    Test-PortTCP
+    Write-KrbtgtEventLog
+    Write-LogMessage

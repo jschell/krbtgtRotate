@@ -6,7 +6,7 @@ schema: 2.0.0
 
 # Write-LogMessage
 ## SYNOPSIS
-Brief description of the function
+Writes a timestamped, categorized message to a log file on disk.
 
 ## SYNTAX
 
@@ -16,7 +16,20 @@ Write-LogMessage [-Message] <Object> [[-Caller] <String>] [[-Category] <String>]
 ```
 
 ## DESCRIPTION
-Detailed description of the function
+Write-LogMessage appends a formatted, timestamped entry to a log file on disk. Each entry
+includes the ISO 8601 timestamp, the calling function name, the category
+(Info, Verbose, Warning, Error, Debug), and the message body.
+
+When called from Invoke-KrbtgtPasswordRotate, the FileName and OutPath are set by the
+caller so all rotation events land in the same file. The default FileName is a new GUID
+(e.g., 'c624ff78aa7e41a3ac43973d774dc267.txt') written to $env:Temp.
+
+To locate a log file written with default settings:
+    dir $env:Temp\*.txt | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+
+Each log line follows this format:
+    [ <ISO8601 timestamp> ] [ <CallerName> ] [ <Category> ]
+    <message body>
 
 ## EXAMPLES
 
@@ -44,6 +57,21 @@ Detailed description of the function
 Description
 -----------
 The message is formatted and written to the log, created by default in the 'Temp' folder.
+
+### -------------------------- EXAMPLE 2 --------------------------
+
+	PS > Write-LogMessage -Message "Halting error encountered on DC01" `
+	        -Caller "Invoke-KrbtgtPasswordRotate" `
+	        -Category "Error" `
+	        -OutPath "C:\logs\krbtgtRotate" `
+	        -FileName "2026-03-01T14.30.00-krbtgtRotate.txt"
+
+Description
+-----------
+Appends an Error-category entry to a named log file in the specified path. If OutPath does
+not exist or is not writable, the log falls back to $env:Temp with a warning. Use a
+consistent FileName across multiple Write-LogMessage calls to collect all events for a
+single rotation run in one file.
 
 ## PARAMETERS
 
